@@ -1,6 +1,5 @@
 import express from "express";
 import { createServer} from "node:http";
-
 import { Server } from "socket.io";
 import mongoose from "mongoose";
 import cors from "cors";
@@ -13,10 +12,8 @@ const io = connectToSocket(server);
 
 
 
-app.get("/", (req,res) => {
-    return res.json({"hezzzllo" : "world"});
-});
-8
+
+
 app.set("port", process.env.PORT || 8000);
 app.use(cors());
 app.use(express.json());
