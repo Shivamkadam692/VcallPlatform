@@ -24,7 +24,7 @@ export default function LandingPage(){
                     <p style={{color: "#131211ff"}}>Cover Distance With Meow Calls</p>
                     
                     <div role="button">
-                        <Link to={"/home"}>Get Started</Link>
+                        <Link to={"/auth"}>Get Started</Link>
                     </div>
                 </div>
                 <div>
