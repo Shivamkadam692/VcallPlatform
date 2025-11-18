@@ -1,6 +1,6 @@
 import axios from "axios";
 import { createContext, useState } from "react";
-
+import server from "../environment.js";
 
 
 export const AuthContext = createContext({});
@@ -9,7 +9,7 @@ export const AuthContext = createContext({});
 export const AuthProvider = ({ children }) => {
 
     const client = axios.create({
-        baseURL: "http://localhost:8000/api/v1/users"
+        baseURL: `${server.dev}/api/v1/users`
     })
 
     const [userData, setUserData] = useState(null);

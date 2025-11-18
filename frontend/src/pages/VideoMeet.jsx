@@ -405,19 +405,19 @@ export default function VideoMeetComponent() {
             let tracks = localVideoref.current.srcObject.getTracks()
             tracks.forEach(track => track.stop())
         } catch (e) { }
-        window.location.href = "/"
+        window.location.href = "/home";
     }
 
-    // let openChat = () => {
-    //     setModal(true);
-    //     setNewMessages(0);
-    // }
-    // let closeChat = () => {
-    //     setModal(false);
-    // }
-    // let handleMessage = (e) => {
-    //     setMessage(e.target.value);
-    // }
+    let openChat = () => {
+        setModal(true);
+        setNewMessages(0);
+    }
+    let closeChat = () => {
+        setModal(false);
+    }
+    let handleMessage = (e) => {
+        setMessage(e.target.value);
+    }
 
     const addMessage = (data, sender, socketIdSender) => {
         setMessages((prevMessages) => [
