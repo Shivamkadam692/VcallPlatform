@@ -1,18 +1,24 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import withAuth from "../utils/withAuth";
 import { useNavigate } from "react-router-dom";
 import "../App.css";
-import { IconButton } from "@mui/material";
+import { IconButton, TextField } from "@mui/material";
 import {Button} from "@mui/material";
 import RestoreIcon from "@mui/icons-material/Restore";
+import { AuthContext } from "../contexts/AuthContext";
+
+
  function HomeComponent() {
 
     let navigate = useNavigate();
 
     const [meetingCode, setMeetingCode] = useState("");
 
+    const{addToUserHistory} = useContext(AuthContext);
+
 
     let handleJoinVideocall = async () => {
+        await addToUserHistory(meetingCode)
        navigate(`/${meetingCode}`)
     }
     return(
@@ -41,6 +47,21 @@ import RestoreIcon from "@mui/icons-material/Restore";
 
         </div>
 
+       </div>
+       <div className="meetContainer">
+        <div className="leftPanel">
+            <div>
+            <h2>Providing Quality Meow Call</h2>
+            <div style={{display: "flex" , gap: "10px"}}>
+                <TextField onChange={e => setMeetingCode(e.target.value) } id="outline-basic" label="Meeting Code" variant="outlined"></TextField>
+                <Button variant="contained" onClick={handleJoinVideocall}>Join</Button>
+            </div>
+        </div>
+        </div>
+
+        <div className="rightPanel">
+            <img src="/logo.png" alt="" />
+        </div>
        </div>
        
        </>

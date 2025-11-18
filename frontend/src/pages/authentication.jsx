@@ -14,56 +14,63 @@ import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { AuthContext } from '../contexts/AuthContext';
 import { Snackbar } from '@mui/material';
+import { useNavigate } from "react-router-dom";
 
 
 
-// TODO remove, this demo shouldn't need to reset the theme.
 
 const defaultTheme = createTheme();
 
 export default function Authentication() {
 
-    
+    const navigate = useNavigate();
 
-    const [username, setUsername] = React.useState();
-    const [password, setPassword] = React.useState();
-    const [name, setName] = React.useState();
-    const [error, setError] = React.useState();
-    const [message, setMessage] = React.useState();
+    const [username, setUsername] = React.useState("");
+    const [password, setPassword] = React.useState("");
+    const [name, setName] = React.useState("");
+    const [error, setError] = React.useState("");
+    const [message, setMessage] = React.useState("");
 
 
     const [formState, setFormState] = React.useState(0);
 
-    const [open, setOpen] = React.useState(false)
-
+    const [open, setOpen] = React.useState(false);
 
     const { handleRegister, handleLogin } = React.useContext(AuthContext);
 
     let handleAuth = async () => {
         try {
             if (formState === 0) {
+                let result = await handleLogin(username, password);
 
-                let result = await handleLogin(username, password)
 
-
-            }
-            if (formState === 1) {
-                let result = await handleRegister(name, username, password);
                 console.log(result);
-                setUsername("");
+
                 setMessage(result);
                 setOpen(true);
-                setError("")
-                setFormState(0)
-                setPassword("")
+                setUsername("");
+                setPassword("");
+                setError("");
+                setFormState(0);
+
+                setTimeout(() => navigate("/home"), 500);
+            }
+
+            if (formState === 1) {
+                let result = await handleRegister(name, username, password);
+                setMessage(result);
+                setOpen(true);
+                setUsername("");
+                setPassword("");
+                setError("");
+                setFormState(0);
             }
         } catch (err) {
-
             console.log(err);
-            let message = (err.response.data.message);
-            setError(message);
+            setError(err.response?.data?.message || "Something wrong");
         }
     }
+
 
 
     return (
@@ -97,8 +104,6 @@ export default function Authentication() {
                         <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
                             <LockOutlinedIcon />
                         </Avatar>
-
-
                         <div>
                             <Button variant={formState === 0 ? "contained" : ""} onClick={() => { setFormState(0) }}>
                                 Sign In
@@ -107,20 +112,18 @@ export default function Authentication() {
                                 Sign Up
                             </Button>
                         </div>
-
                         <Box component="form" noValidate sx={{ mt: 1 }}>
                             {formState === 1 ? <TextField
                                 margin="normal"
                                 required
                                 fullWidth
-                                id="username"
+                                id="name"
                                 label="Full Name"
-                                name="username"
+                                name="name"
                                 value={name}
                                 autoFocus
                                 onChange={(e) => setName(e.target.value)}
                             /> : <></>}
-
                             <TextField
                                 margin="normal"
                                 required
@@ -131,7 +134,6 @@ export default function Authentication() {
                                 value={username}
                                 autoFocus
                                 onChange={(e) => setUsername(e.target.value)}
-
                             />
                             <TextField
                                 margin="normal"
@@ -142,7 +144,6 @@ export default function Authentication() {
                                 value={password}
                                 type="password"
                                 onChange={(e) => setPassword(e.target.value)}
-
                                 id="password"
                             />
 
@@ -155,9 +156,8 @@ export default function Authentication() {
                                 sx={{ mt: 3, mb: 2 }}
                                 onClick={handleAuth}
                             >
-                                {formState === 0 ? "Login " : "Register"}
+                                {formState === 0 ? "Login" : "Register"}
                             </Button>
-
                         </Box>
                     </Box>
                 </Grid>
