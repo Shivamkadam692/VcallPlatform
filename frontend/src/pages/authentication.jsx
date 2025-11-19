@@ -3,27 +3,34 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
+import HomeIcon from '@mui/icons-material/Home';
 import { AuthContext } from '../contexts/AuthContext';
 import { Snackbar } from '@mui/material';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 
 
 
-const defaultTheme = createTheme();
+const defaultTheme = createTheme({
+    palette: {
+        primary: { main: '#FF9839' },
+        secondary: { main: '#FF8C00' }
+    }
+});
 
 export default function Authentication() {
 
     const navigate = useNavigate();
+    const location = useLocation();
 
     const [username, setUsername] = React.useState("");
     const [password, setPassword] = React.useState("");
@@ -37,6 +44,13 @@ export default function Authentication() {
     const [open, setOpen] = React.useState(false);
 
     const { handleRegister, handleLogin } = React.useContext(AuthContext);
+
+    React.useEffect(() => {
+        const params = new URLSearchParams(location.search);
+        const mode = params.get("mode");
+        if (mode === "register") setFormState(1);
+        if (mode === "login") setFormState(0);
+    }, [location.search]);
 
     let handleAuth = async () => {
         try {
@@ -67,7 +81,7 @@ export default function Authentication() {
             }
         } catch (err) {
             console.log(err);
-            setError(err.response?.data?.message || "Something wrong");
+            setError(err.response?.data?.message || "Something went wrong");
         }
     }
 
@@ -75,7 +89,24 @@ export default function Authentication() {
 
     return (
         <ThemeProvider theme={defaultTheme}>
-            <Grid container component="main" sx={{ height: '100vh' }}>
+            <AppBar position="static" sx={{
+                background: 'rgba(255,255,255,0.15)',
+                boxShadow: '0 8px 32px rgba(31,38,135,0.37)',
+                backdropFilter: 'blur(10px)',
+                WebkitBackdropFilter: 'blur(10px)',
+                border: '1px solid rgba(255,255,255,0.3)',
+                color: 'white'
+            }}>
+                <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <Typography variant="h6" component="div" sx={{ color: '#FF9839', fontWeight: 600 }}>
+                        Meow Video Call
+                    </Typography>
+                    <IconButton aria-label="Home" onClick={() => navigate('/home')} sx={{ color: '#FF9839', '&:hover': { color: '#FF7A00' } }}>
+                        <HomeIcon />
+                    </IconButton>
+                </Toolbar>
+            </AppBar>
+            <Grid container component="main" sx={{ height: 'calc(100vh - 64px)', backgroundColor: '#ffffff' }}>
                 <CssBaseline />
                 <Grid
                     item
@@ -83,15 +114,16 @@ export default function Authentication() {
                     sm={4}
                     md={7}
                     sx={{
-                        backgroundImage: 'url(https://source.unsplash.com/random?wallpapers)',
-                        backgroundRepeat: 'no-repeat',
-                        backgroundColor: (t) =>
-                            t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
-                        backgroundSize: 'cover',
-                        backgroundPosition: 'center',
+                        backgroundColor: '#ffffff'
                     }}
                 />
-                <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+                <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square sx={{
+                    background: 'rgba(255,255,255,0.15)',
+                    border: '1px solid rgba(0,0,0,0.1)',
+                    boxShadow: '0 8px 32px rgba(31,38,135,0.37)',
+                    backdropFilter: 'blur(10px)',
+                    WebkitBackdropFilter: 'blur(10px)'
+                }}>
                     <Box
                         sx={{
                             my: 8,
@@ -105,10 +137,21 @@ export default function Authentication() {
                             <LockOutlinedIcon />
                         </Avatar>
                         <div>
-                            <Button variant={formState === 0 ? "contained" : ""} onClick={() => { setFormState(0) }}>
+                            <Button variant={formState === 0 ? "contained" : "text"} onClick={() => { setFormState(0) }} sx={formState === 0 ? {
+                                background: 'linear-gradient(90deg, #FF8C00, #FF9839)',
+                                color: '#ffffff',
+                                boxShadow: '0 8px 24px rgba(31,38,135,0.37)',
+                                borderRadius: '10px'
+                            } : { color: '#FF9839' }}>
                                 Sign In
                             </Button>
-                            <Button variant={formState === 1 ? "contained" : ""} onClick={() => { setFormState(1) }}>
+                            <Button variant={formState === 1 ? "contained" : "text"} onClick={() => { setFormState(1) }} sx={formState === 1 ? {
+                                background: 'linear-gradient(90deg, #FF8C00, #FF9839)',
+                                color: '#ffffff',
+                                boxShadow: '0 8px 24px rgba(31,38,135,0.37)',
+                                borderRadius: '10px',
+                                ml: 1
+                            } : { color: '#FF9839', ml: 1 }}>
                                 Sign Up
                             </Button>
                         </div>
@@ -123,6 +166,17 @@ export default function Authentication() {
                                 value={name}
                                 autoFocus
                                 onChange={(e) => setName(e.target.value)}
+                                sx={{
+                                    input: { color: '#000000' },
+                                    label: { color: '#000000' },
+                                    '& .MuiOutlinedInput-root': {
+                                        background: '#ffffff',
+                                        borderRadius: '12px',
+                                        '& fieldset': { borderColor: 'rgba(0,0,0,0.2)' },
+                                        '&:hover fieldset': { borderColor: '#FF9839' },
+                                        '&.Mui-focused fieldset': { borderColor: '#FF9839' }
+                                    }
+                                }}
                             /> : <></>}
                             <TextField
                                 margin="normal"
@@ -132,8 +186,19 @@ export default function Authentication() {
                                 label="Username"
                                 name="username"
                                 value={username}
-                                autoFocus
+                                autoFocus={formState === 0}
                                 onChange={(e) => setUsername(e.target.value)}
+                                sx={{
+                                    input: { color: '#000000' },
+                                    label: { color: '#000000' },
+                                    '& .MuiOutlinedInput-root': {
+                                        background: '#ffffff',
+                                        borderRadius: '12px',
+                                        '& fieldset': { borderColor: 'rgba(0,0,0,0.2)' },
+                                        '&:hover fieldset': { borderColor: '#FF9839' },
+                                        '&.Mui-focused fieldset': { borderColor: '#FF9839' }
+                                    }
+                                }}
                             />
                             <TextField
                                 margin="normal"
@@ -145,6 +210,17 @@ export default function Authentication() {
                                 type="password"
                                 onChange={(e) => setPassword(e.target.value)}
                                 id="password"
+                                sx={{
+                                    input: { color: '#000000' },
+                                    label: { color: '#000000' },
+                                    '& .MuiOutlinedInput-root': {
+                                        background: '#ffffff',
+                                        borderRadius: '12px',
+                                        '& fieldset': { borderColor: 'rgba(0,0,0,0.2)' },
+                                        '&:hover fieldset': { borderColor: '#FF9839' },
+                                        '&.Mui-focused fieldset': { borderColor: '#FF9839' }
+                                    }
+                                }}
                             />
 
                             <p style={{ color: "red" }}>{error}</p>
@@ -153,7 +229,13 @@ export default function Authentication() {
                                 type="button"
                                 fullWidth
                                 variant="contained"
-                                sx={{ mt: 3, mb: 2 }}
+                                sx={{ mt: 3, mb: 2,
+                                    background: 'linear-gradient(90deg, #FF8C00, #FF9839)',
+                                    color: '#ffffff',
+                                    boxShadow: '0 8px 24px rgba(31,38,135,0.37)',
+                                    borderRadius: '10px',
+                                    '&:hover': { background: 'linear-gradient(90deg, #FF7A00, #FF8F2F)' }
+                                }}
                                 onClick={handleAuth}
                             >
                                 {formState === 0 ? "Login" : "Register"}

@@ -3,6 +3,16 @@ import { Server } from "socket.io";
 let connection = {};
 let messages = {};
 let timeOnline = {};
+let userDetails = {};
+
+const getParticipants = (path) => {
+    if (!connection[path]) return [];
+    return connection[path].map((socketId) => ({
+        socketId,
+        username: userDetails[socketId]?.username || "Guest",
+        audioEnabled: userDetails[socketId]?.audioEnabled ?? true
+    }));
+};
 
 export const connectToSocket = (server) => {
     const io = new Server(server, {
@@ -17,16 +27,27 @@ export const connectToSocket = (server) => {
     io.on("connection", (socket) => {
 
         // JOIN CALL
-        socket.on("join-call", (path) => {
+        socket.on("join-call", (payload) => {
+            const { path, username } = typeof payload === "string" ? { path: payload } : payload || {};
+            if (!path) return;
 
             if (!connection[path]) connection[path] = [];
-            connection[path].push(socket.id);
+            if (!connection[path].includes(socket.id)) {
+                connection[path].push(socket.id);
+            }
 
             timeOnline[socket.id] = new Date();
+            userDetails[socket.id] = {
+                username: username || "Guest",
+                audioEnabled: true,
+                room: path
+            };
+
+            const participants = getParticipants(path);
 
             // Notify existing users
             for (let a = 0; a < connection[path].length; a++) {
-                io.to(connection[path][a]).emit("user-joined", socket.id, connection[path]);
+                io.to(connection[path][a]).emit("user-joined", socket.id, connection[path], participants);
             }
 
             // Send chat history
@@ -77,6 +98,25 @@ export const connectToSocket = (server) => {
 
         });
 
+        socket.on("media-state", (state = {}) => {
+            if (!userDetails[socket.id]) return;
+            const roomKey = userDetails[socket.id].room;
+            if (!roomKey || !connection[roomKey]) return;
+
+            userDetails[socket.id] = {
+                ...userDetails[socket.id],
+                ...state
+            };
+
+            const safeState = {
+                audioEnabled: userDetails[socket.id].audioEnabled ?? true
+            };
+
+            connection[roomKey].forEach((clientId) => {
+                io.to(clientId).emit("media-state-changed", socket.id, safeState);
+            });
+        });
+
         // DISCONNECT
         socket.on("disconnect", () => {
 
@@ -98,6 +138,8 @@ export const connectToSocket = (server) => {
                     break;
                 }
             }
+
+            delete userDetails[socket.id];
         });
     });
 
