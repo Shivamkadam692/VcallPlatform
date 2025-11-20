@@ -256,3 +256,29 @@
         margin: 0 auto;
     }
 }
+
+@media (max-width: 480px) {
+    .buttonContainers{
+        flex-wrap: wrap;
+        gap: 12px;
+        padding: 10px 12px;
+        bottom: 16px;
+    }
+    .controlButton{
+        width: 44px;
+        height: 44px;
+    }
+    .conferenceView{
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 12px;
+    }
+    .videoTile{
+        min-height: 140px;
+    }
+    .slideControls{
+        gap: 8px;
+    }
+    .chatActive{
+        padding-bottom: 140px;
+    }
+}

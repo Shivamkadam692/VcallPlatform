@@ -106,31 +106,51 @@ export default function Authentication() {
                     </IconButton>
                 </Toolbar>
             </AppBar>
-            <Grid container component="main" sx={{ height: 'calc(100vh - 64px)', backgroundColor: '#ffffff' }}>
+            <Grid container component="main" sx={{
+                minHeight: 'calc(100vh - 64px)',
+                background: 'linear-gradient(135deg, #f5f7fb 0%, #ffffff 60%)'
+            }}>
                 <CssBaseline />
                 <Grid
                     item
-                    xs={false}
-                    sm={4}
+                    xs={12}
+                    sm={5}
                     md={7}
                     sx={{
-                        backgroundColor: '#ffffff'
+                        display: { xs: 'none', sm: 'flex' },
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        background: 'radial-gradient(circle at top, #101828, #05060b)',
+                        color: '#fff',
+                        textAlign: 'center',
+                        padding: 4
                     }}
-                />
-                <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square sx={{
-                    background: 'rgba(255,255,255,0.15)',
-                    border: '1px solid rgba(0,0,0,0.1)',
-                    boxShadow: '0 8px 32px rgba(31,38,135,0.37)',
+                >
+                    <Box maxWidth={360}>
+                        <Typography variant="h3" fontWeight={700} gutterBottom>
+                            Join the Meow community
+                        </Typography>
+                        <Typography variant="body1" color="rgba(255,255,255,0.75)">
+                            Host HD calls, share screens, and keep your conversations flowing anywhere.
+                        </Typography>
+                    </Box>
+                </Grid>
+                <Grid item xs={12} sm={7} md={5} component={Paper} elevation={6} square sx={{
+                    background: 'rgba(255,255,255,0.9)',
+                    border: '1px solid rgba(0,0,0,0.05)',
+                    boxShadow: '0 8px 32px rgba(31,38,135,0.15)',
                     backdropFilter: 'blur(10px)',
                     WebkitBackdropFilter: 'blur(10px)'
                 }}>
                     <Box
                         sx={{
-                            my: 8,
-                            mx: 4,
+                            my: { xs: 4, sm: 6 },
+                            mx: { xs: 3, sm: 6 },
                             display: 'flex',
                             flexDirection: 'column',
                             alignItems: 'center',
+                            maxWidth: 420,
+                            marginInline: 'auto'
                         }}
                     >
                         <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>

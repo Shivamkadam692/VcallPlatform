@@ -9,8 +9,8 @@
 .meetContainer{
   display: flex;
   padding-inline: 20px;
-  height: 80vh;
- 
+  min-height: calc(100vh - 120px);
+  padding-block: 40px;
   gap: 10vw;
    justify-content: center;
   align-items: center;
@@ -33,7 +33,7 @@
   width: 30vw;
   height: auto;
   border-radius: 20px;
-  box-shadow: 0 8px 32px rgba(31,38,135,0.37);
+  max-width: 420px;
 }
 
 .leftPanel > div {
@@ -51,18 +51,32 @@
     flex-direction: column;
     gap: 24px;
     padding-inline: 16px;
-    height: auto;
-    min-height: calc(100vh - 64px);
+    padding-block: 32px;
   }
   .leftPanel {
     justify-content: center;
+    width: 100%;
   }
   .leftPanel > div {
     width: 100%;
     margin: 8px 0;
+    text-align: center;
   }
   .rightPanel > img {
     width: 80vw;
     margin-bottom: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .meetContainer{
+    padding-inline: 12px;
+    padding-block: 24px;
+  }
+  .leftPanel > div {
+    padding: 18px;
+  }
+  .rightPanel > img{
+    width: 100%;
   }
 }
